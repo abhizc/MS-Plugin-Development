@@ -57,6 +57,8 @@ namespace Plugins
 
                         EntityCollection collection = service.RetrieveMultiple(query);
 
+                        //Comment
+
                         if(collection.Entities.Count > 0)
                         {
                             throw new InvalidPluginExecutionException(" COntact with email already exist");
