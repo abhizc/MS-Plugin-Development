@@ -1,15 +1,15 @@
-﻿using Microsoft.Xrm.Sdk;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
-
+using Microsoft.Xrm.Sdk;
+using System.ServiceModel;
+using System.Diagnostics.Eventing.Reader;
 
 namespace Plugins
 {
-    public class TaskCreate : IPlugin
+    public class PreEntityImagedemo : IPlugin
     {
         public void Execute(IServiceProvider serviceProvider)
         {
@@ -36,27 +36,17 @@ namespace Plugins
                 context.InputParameters["Target"] is Entity)
             {
                 // Obtain the target entity from the input parameters.  
-                Entity contact = (Entity)context.InputParameters["Target"];
+                Entity entity = (Entity)context.InputParameters["Target"];
 
                 try
                 {
                     // Plug-in business logic goes here. 
 
-                    Entity taskRecord = new Entity("task");
-                    taskRecord.Attributes.Add("subject", "Folloup Task");
-                    taskRecord.Attributes.Add("description", "Description Folloup Task");
-                    taskRecord.Attributes.Add("scheduledend", DateTime.Now.AddDays(2));
+                    String ModifiedPhoneNumber = entity.Attributes["telephone1"].ToString();
+                    Entity preimage = (Entity)context.PreEntityImages["PreImage"];
+                    String OldPhoneNumber = preimage.Attributes["telephone1"].ToString();
 
-                    taskRecord.Attributes.Add("prioritycode", new OptionSetValue(2));
-
-                    //taskrecord.Attributes.Add("regardingobjectid", new EntityReference("contact", entity.Id));
-                    taskRecord.Attributes.Add("regardingobjectid", contact.ToEntityReference());
-
-
-
-                    Guid taskGuid = service.Create(taskRecord);
-                    
-
+                    throw new InvalidPluginExecutionException("Phone nuber is changed from " + OldPhoneNumber + "to" + ModifiedPhoneNumber);
 
                 }
 
